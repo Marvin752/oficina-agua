@@ -11,9 +11,8 @@
 (function () {
     'use strict';
 
-    //git const TIEMPO_INACTIVIDAD = 2 * 60 * 1000; // 2 minutos
-    const TIEMPO_INACTIVIDAD = 10 * 1000; // 10 segundos para probar (final: 2 * 60 * 1000)
-    const SEGUNDOS_CUENTA = 15;           // duración de la cuenta regresiva
+    const TIEMPO_INACTIVIDAD = 2 * 60 * 1000; // 2 minutos
+    const SEGUNDOS_CUENTA = 60;           // duración de la cuenta regresiva
 
     // Acciones que cuentan como "actividad" del usuario.
     const EVENTOS_ACTIVIDAD = ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart'];
