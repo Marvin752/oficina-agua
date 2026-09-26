@@ -4,6 +4,10 @@
  * Uso: agregar el atributo data-fuerza-password a cualquier
  * <input type="password"> y cargar este archivo en la vista.
  * El indicador se crea automáticamente debajo del campo.
+ *
+ * Si la contraseña es débil, el formulario NO se envía
+ * (setCustomValidity). El servidor también lo valida con
+ * la regla App\Rules\ContrasenaSegura.
  */
 (function () {
     'use strict';
@@ -71,8 +75,11 @@
         const valor = input.value;
 
         // Campo vacío: se oculta (útil en editar, donde la contraseña es opcional).
+        // Si el campo es obligatorio, el atributo "required" se encarga.
         if (valor === '') {
             contenedor.style.display = 'none';
+            input.setCustomValidity('');
+            input.classList.remove('is-invalid');
             return;
         }
 
@@ -80,6 +87,18 @@
 
         const { nivel, cumplidos } = evaluar(valor);
         const datos = NIVELES[nivel];
+
+        // Bloqueo: con un mensaje en setCustomValidity el navegador
+        // considera el campo inválido y no deja enviar el formulario.
+        if (nivel === 'debil') {
+            input.setCustomValidity(
+                'La contraseña es débil. Combine mayúsculas, números y símbolos, o use 12 caracteres o más.'
+            );
+            input.classList.add('is-invalid');
+        } else {
+            input.setCustomValidity('');
+            input.classList.remove('is-invalid');
+        }
 
         const barra = contenedor.querySelector('.progress-bar');
         barra.className = 'progress-bar ' + datos.clase;

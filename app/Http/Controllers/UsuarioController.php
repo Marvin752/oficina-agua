@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Rules\ContrasenaSegura;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -256,12 +257,14 @@ if (
                 'string',
                 'min:8',
                 'confirmed',
+                new ContrasenaSegura(),
             ]
             : [
                 'required',
                 'string',
                 'min:8',
                 'confirmed',
+                new ContrasenaSegura(),
             ];
 
         return $request->validate(
