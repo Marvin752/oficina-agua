@@ -538,6 +538,17 @@ return [
 
     'plugins' => [
 
+        // Script propio: aviso de sesión por inactividad (todas las páginas).
+        'aviso_inactividad' => [
+
+            'enabled' =>
+                true,
+
+            'js' =>
+                'js/aviso-inactividad.js',
+        ],
+
+
         'flatpickr' => [
 
             'enabled' =>
