@@ -5,7 +5,7 @@
  * <input type="password"> y cargar este archivo en la vista.
  * El indicador se crea automáticamente debajo del campo.
  *
- * Si la contraseña es débil, el formulario NO se envía
+ * Si la contraseña no es fuerte, el formulario NO se envía
  * (setCustomValidity). El servidor también lo valida con
  * la regla App\Rules\ContrasenaSegura.
  */
@@ -90,9 +90,10 @@
 
         // Bloqueo: con un mensaje en setCustomValidity el navegador
         // considera el campo inválido y no deja enviar el formulario.
-        if (nivel === 'debil') {
+        // Solo se acepta una contraseña FUERTE (cumple los 5 criterios).
+        if (nivel !== 'fuerte') {
             input.setCustomValidity(
-                'La contraseña es débil. Combine mayúsculas, números y símbolos, o use 12 caracteres o más.'
+                'La contraseña debe ser fuerte: 12 caracteres o más, con mayúscula, número y símbolo.'
             );
             input.classList.add('is-invalid');
         } else {

@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 /**
- * Rechaza contraseñas débiles.
+ * Solo acepta contraseñas FUERTES.
  *
  * Usa los mismos criterios que el indicador visual
  * (public/js/fuerza-password.js), para que el navegador
@@ -18,12 +18,12 @@ use Illuminate\Contracts\Validation\ValidationRule;
  * - un número
  * - un símbolo
  *
- * Cada criterio suma 1 punto. Con menos de 3 puntos
- * la contraseña se considera débil y no se acepta.
+ * Cada criterio suma 1 punto. Solo con los 5 puntos
+ * (contraseña fuerte) se acepta.
  */
 class ContrasenaSegura implements ValidationRule
 {
-    private const PUNTAJE_MINIMO = 3;
+    private const PUNTAJE_MINIMO = 5;
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
@@ -53,8 +53,8 @@ class ContrasenaSegura implements ValidationRule
 
         if ($puntaje < self::PUNTAJE_MINIMO) {
             $fail(
-                'La contraseña es débil. Combine mayúsculas, números '
-                . 'y símbolos, o use 12 caracteres o más.'
+                'La contraseña debe ser fuerte: 12 caracteres o más, '
+                . 'con al menos una mayúscula, un número y un símbolo.'
             );
         }
     }

@@ -93,6 +93,19 @@ class AutenticacionController extends Controller
          */
         $request->session()->regenerateToken();
 
+        /*
+         * Si el cierre lo provocó el aviso de inactividad,
+         * se informa al usuario en la pantalla de login.
+         */
+        if ($request->input('motivo') === 'inactividad') {
+            return redirect()
+                ->route('login')
+                ->withErrors([
+                    'sesion' =>
+                        'Su sesión se cerró por inactividad. Inicie sesión nuevamente.',
+                ]);
+        }
+
         return redirect()->route('login');
     }
 

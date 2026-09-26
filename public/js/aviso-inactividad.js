@@ -3,20 +3,22 @@
  *
  * - Si el usuario no interactúa durante TIEMPO_INACTIVIDAD, se muestra
  *   un modal con cuenta regresiva y el botón "Seguir conectado".
- * - No cierra la sesión realmente: al llegar a 0 solo muestra un aviso.
+ * - Al llegar a 0 cierra la sesión enviando el formulario de logout
+ *   del menú de usuario (POST /logout con su token CSRF).
  *
  * Se carga en todas las páginas del panel mediante config/adminlte.php.
  */
 (function () {
     'use strict';
 
-   const TIEMPO_INACTIVIDAD = 10 * 1000; // 10 segundos para probar
-    const SEGUNDOS_CUENTA = 60;                // duración de la cuenta regresiva
+    //git const TIEMPO_INACTIVIDAD = 2 * 60 * 1000; // 2 minutos
+    const TIEMPO_INACTIVIDAD = 10 * 1000; // 10 segundos para probar (final: 2 * 60 * 1000)
+    const SEGUNDOS_CUENTA = 15;           // duración de la cuenta regresiva
 
     // Acciones que cuentan como "actividad" del usuario.
     const EVENTOS_ACTIVIDAD = ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart'];
 
-    let temporizadorInactividad = null; // setTimeout de los 2 minutos
+    let temporizadorInactividad = null; // setTimeout de inactividad
     let intervaloCuenta = null;         // setInterval de la cuenta regresiva
     let segundosRestantes = SEGUNDOS_CUENTA;
     let modalVisible = false;
@@ -87,8 +89,7 @@
 
             if (segundosRestantes <= 0) {
                 clearInterval(intervaloCuenta);
-                // Simulación: no se cierra la sesión, solo se informa.
-                mensaje.textContent = 'La sesión habría expirado por inactividad.';
+                cerrarSesion();
             }
         }, 1000);
     }
@@ -105,6 +106,31 @@
             modal.style.display = 'none';
             backdrop.remove();
         }, 150);
+    }
+
+    function cerrarSesion() {
+        mensaje.textContent = 'Cerrando sesión por inactividad...';
+        boton.disabled = true;
+
+        // Se reutiliza el formulario "Cerrar sesión" del menú de usuario,
+        // que ya incluye el token CSRF que Laravel exige en un POST.
+        const formulario = document.getElementById('form-cerrar-sesion');
+
+        if (!formulario) {
+            // Respaldo: al recargar, si la sesión ya no es válida,
+            // el middleware "auth" redirige al login.
+            window.location.reload();
+            return;
+        }
+
+        // Campo extra para que el login muestre el motivo del cierre.
+        const motivo = document.createElement('input');
+        motivo.type = 'hidden';
+        motivo.name = 'motivo';
+        motivo.value = 'inactividad';
+        formulario.appendChild(motivo);
+
+        formulario.submit();
     }
 
     function reiniciarTemporizador() {

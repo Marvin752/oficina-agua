@@ -12,7 +12,7 @@
         </li>
         <li><hr class="dropdown-divider"></li>
         <li>
-            <form action="{{ route('logout') }}" method="POST">
+            <form action="{{ route('logout') }}" method="POST" id="form-cerrar-sesion">
                 @csrf
                 <button type="submit" class="dropdown-item text-danger d-flex align-items-center gap-2">
                     <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
