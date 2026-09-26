@@ -132,6 +132,7 @@
                         class="form-control"
                         minlength="8"
                         autocomplete="new-password"
+                        data-fuerza-password
                     >
 
                     <small class="form-text text-muted">
@@ -177,4 +178,8 @@
         </div>
     </div>
 
+@stop
+
+@section('js')
+    <script src="{{ asset('js/fuerza-password.js') }}"></script>
 @stop
